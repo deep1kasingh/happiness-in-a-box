@@ -9,6 +9,7 @@ import { StreakBadge } from "@/components/streak/StreakBadge";
 import { TaskCard } from "@/components/task/TaskCard";
 import { ProgressRing } from "@/components/motivation/ProgressRing";
 import { MotivationMessage } from "@/components/motivation/MotivationMessage";
+import { JournalEditor } from "@/components/journal/JournalEditor";
 
 export default function PathPage() {
   const params = useParams();
@@ -38,6 +39,7 @@ export default function PathPage() {
 
   const streak = getStreak(path.id);
   const progress = todayProgress(path.id, tasks.length);
+  const isJournalingPath = path.id === "path-journaling";
 
   return (
     <div className="mx-auto min-h-dvh max-w-lg px-4 pb-12 pt-6">
@@ -74,7 +76,7 @@ export default function PathPage() {
               </h2>
               <ul className="space-y-3">
                 {tasks.map((task) => (
-                  <li key={task.id}>
+                  <li key={task.id} className="space-y-2">
                     <TaskCard
                       task={task}
                       completed={isTaskDone(path.id, task.id, today)}
@@ -83,6 +85,14 @@ export default function PathPage() {
                         setTaskCompleted(path.id, task.id, today, !currentlyDone, tasks.length);
                       }}
                     />
+                    {isJournalingPath && (
+                      <JournalEditor
+                        taskId={task.id}
+                        taskTitle={task.title}
+                        date={today}
+                        placeholder={task.description}
+                      />
+                    )}
                   </li>
                 ))}
               </ul>

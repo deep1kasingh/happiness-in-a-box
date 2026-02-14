@@ -4,6 +4,7 @@
  */
 
 const KEY_COMPLETIONS_PREFIX = "hib_completions_"; // + userId or "guest"
+const KEY_JOURNAL_PREFIX = "hib_journal_"; // + userId or "guest"
 const KEY_MOTIVATION = "hib_motivation";
 const KEY_AUTH_SESSION = "hib_auth_session";
 const KEY_AUTH_USERS = "hib_auth_users"; // mock: registered users (replace with API)
@@ -32,10 +33,23 @@ export interface StoredAuthSession {
   version: number;
 }
 
+export interface JournalEntry {
+  date: string; // YYYY-MM-DD
+  taskId: string; // e.g. "task-morning-journal"
+  content: string; // the journal text
+  updatedAt: string; // ISO timestamp
+}
+
+export interface StoredJournal {
+  entries: JournalEntry[];
+  version: number;
+}
+
 /** Mock only: keyed by email. Replace with real API. */
 export type StoredAuthUsers = Record<string, { id: string; email: string; password: string }>;
 
 const COMPLETIONS_VERSION = 1;
+const JOURNAL_VERSION = 1;
 const MOTIVATION_VERSION = 1;
 const AUTH_SESSION_VERSION = 1;
 
@@ -78,6 +92,29 @@ export const storage = {
     const key = KEY_COMPLETIONS_PREFIX + (userBucket || "guest");
     try {
       localStorage.setItem(key, JSON.stringify({ ...data, version: COMPLETIONS_VERSION }));
+    } catch {
+      // ignore
+    }
+  },
+
+  getJournal(userBucket: string): StoredJournal | null {
+    if (!isClient()) return null;
+    const key = KEY_JOURNAL_PREFIX + (userBucket || "guest");
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const data = JSON.parse(raw) as StoredJournal;
+      return data.version === JOURNAL_VERSION ? data : null;
+    } catch {
+      return null;
+    }
+  },
+
+  setJournal(userBucket: string, data: StoredJournal): void {
+    if (!isClient()) return;
+    const key = KEY_JOURNAL_PREFIX + (userBucket || "guest");
+    try {
+      localStorage.setItem(key, JSON.stringify({ ...data, version: JOURNAL_VERSION }));
     } catch {
       // ignore
     }
