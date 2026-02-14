@@ -15,9 +15,24 @@ const display = Fraunces({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://happiness-in-a-box.vercel.app"),
   title: "Happiness in a Box",
-  description: "Daily paths for mind, body and breath. Track your streak and grow.",
+  description:
+    "Daily paths for mind, body and breath. Track your streak and grow.",
   manifest: "/manifest.json",
+  openGraph: {
+    title: "Happiness in a Box",
+    description:
+      "Daily paths for mind, body and breath. Track your streak and grow.",
+    siteName: "Happiness in a Box",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Happiness in a Box",
+    description:
+      "Daily paths for mind, body and breath. Track your streak and grow.",
+  },
 };
 
 export default function RootLayout({
