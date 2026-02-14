@@ -1,0 +1,10 @@
+{
+  "name": "Happiness in a Box",
+  "short_name": "HIB",
+  "description": "Daily paths for mind, body and breath. Track your streak and grow.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fef7ee",
+  "theme_color": "#ed751a",
+  "orientation": "portrait-primary"
+}

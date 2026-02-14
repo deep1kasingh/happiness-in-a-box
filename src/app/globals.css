@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --warmth: 25 95% 53%;
+  --calm: 174 72% 40%;
+  --bg: 40 33% 98%;
+  --surface: 0 0% 100%;
+  --text: 24 10% 12%;
+  --muted: 24 6% 45%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: 24 10% 8%;
+    --surface: 24 8% 12%;
+    --text: 40 15% 95%;
+    --muted: 24 6% 55%;
+  }
+}
+
+body {
+  background: hsl(var(--bg));
+  color: hsl(var(--text));
+  min-height: 100dvh;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
