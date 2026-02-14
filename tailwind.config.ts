@@ -37,8 +37,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "var(--font-geist-sans)", "sans-serif"],
+        sans: ["Outfit", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
+        display: ["Fraunces", "Georgia", "Cambria", "Times New Roman", "serif"],
       },
     },
   },
