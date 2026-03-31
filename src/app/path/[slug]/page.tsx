@@ -7,6 +7,7 @@ import { useAppStore } from "@/store/use-app-store";
 import { todayString } from "@/lib/dates";
 import { StreakBadge } from "@/components/streak/StreakBadge";
 import { TaskCard } from "@/components/task/TaskCard";
+import { JournalTaskCard } from "@/components/task/JournalTaskCard";
 import { ProgressRing } from "@/components/motivation/ProgressRing";
 import { MotivationMessage } from "@/components/motivation/MotivationMessage";
 
@@ -23,6 +24,8 @@ export default function PathPage() {
   const getStreak = useAppStore((s) => s.getStreak);
   const isTaskDone = useAppStore((s) => s.isTaskDone);
   const setTaskCompleted = useAppStore((s) => s.setTaskCompleted);
+  const setJournalEntry = useAppStore((s) => s.setJournalEntry);
+  const getJournalEntry = useAppStore((s) => s.getJournalEntry);
   const todayProgress = useAppStore((s) => s.todayProgress);
 
   if (!path) {
@@ -73,18 +76,28 @@ export default function PathPage() {
                 Tasks
               </h2>
               <ul className="space-y-3">
-                {tasks.map((task) => (
-                  <li key={task.id}>
-                    <TaskCard
-                      task={task}
-                      completed={isTaskDone(path.id, task.id, today)}
-                      onToggle={() => {
-                        const currentlyDone = isTaskDone(path.id, task.id, today);
-                        setTaskCompleted(path.id, task.id, today, !currentlyDone, tasks.length);
-                      }}
-                    />
-                  </li>
-                ))}
+                {tasks.map((task) =>
+                  task.unit === "journal" ? (
+                    <li key={task.id}>
+                      <JournalTaskCard
+                        task={task}
+                        value={getJournalEntry(path.id, task.id, today)}
+                        onChange={(text) => setJournalEntry(path.id, task.id, today, text, tasks.length)}
+                      />
+                    </li>
+                  ) : (
+                    <li key={task.id}>
+                      <TaskCard
+                        task={task}
+                        completed={isTaskDone(path.id, task.id, today)}
+                        onToggle={() => {
+                          const currentlyDone = isTaskDone(path.id, task.id, today);
+                          setTaskCompleted(path.id, task.id, today, !currentlyDone, tasks.length);
+                        }}
+                      />
+                    </li>
+                  )
+                )}
               </ul>
             </section>
           </>

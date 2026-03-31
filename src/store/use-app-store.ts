@@ -25,6 +25,8 @@ export interface AppActions {
   hydrate: (userBucket: string) => Promise<void>;
   persist: () => void;
   setTaskCompleted: (pathId: string, taskId: string, date: string, completed: boolean, totalTasksInPath: number) => void;
+  setJournalEntry: (pathId: string, taskId: string, date: string, text: string, totalTasksInPath: number) => void;
+  getJournalEntry: (pathId: string, taskId: string, date: string) => string;
   getCompletion: (pathId: string, date: string) => DayCompletion | undefined;
   getStreak: (pathId: string) => ReturnType<typeof computeStreak>;
   isTaskDone: (pathId: string, taskId: string, date: string) => boolean;
@@ -85,6 +87,29 @@ export const useAppStore = create<AppState & AppActions>((set, get) => ({
       return { completions: next };
     });
     get().persist();
+  },
+
+  setJournalEntry: (pathId, taskId, date, text, totalTasksInPath) => {
+    set((state) => {
+      const next = state.completions.slice();
+      const c = ensureCompletion(next, pathId, date);
+      const completedTasks = { ...c.completedTasks };
+      if (text.trim()) {
+        completedTasks[taskId] = text;
+      } else {
+        delete completedTasks[taskId];
+      }
+      c.completedTasks = completedTasks;
+      c.fullDayCompleted = totalTasksInPath > 0 && Object.keys(completedTasks).length >= totalTasksInPath;
+      return { completions: next };
+    });
+    get().persist();
+  },
+
+  getJournalEntry: (pathId, taskId, date) => {
+    const c = get().getCompletion(pathId, date);
+    const val = c?.completedTasks[taskId];
+    return typeof val === "string" ? val : "";
   },
 
   getCompletion: (pathId, date) => {

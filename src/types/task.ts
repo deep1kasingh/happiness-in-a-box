@@ -4,7 +4,7 @@
  */
 export type TaskId = string;
 
-export type TaskUnit = "minutes" | "reps" | "count" | "check";
+export type TaskUnit = "minutes" | "reps" | "count" | "check" | "journal";
 
 export interface Task {
   id: TaskId;
